@@ -1,0 +1,26 @@
+{
+  "name": "fundraisetest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:server": "ts-node-dev ./src/server/index.ts",
+    "dev:client": "ts-node-dev ./src/client/index.ts",
+    "build": "tsc",
+    "client": "node ./dist/client.index.js",
+    "server": "node ./dist/server.index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^17.0.21",
+    "@typescript-eslint/eslint-plugin": "^5.13.0",
+    "@typescript-eslint/parser": "^5.13.0",
+    "eslint": "^8.10.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "prettier": "^2.5.1",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.6.2"
+  }
+}
