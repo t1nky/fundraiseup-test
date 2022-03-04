@@ -3,8 +3,8 @@ import { PingClient } from "./PingClient";
 console.log("Starting client");
 
 const client = new PingClient(
-  "https://fundraiseup.com/",
-  "http://127.0.0.1:8080"
+  process.env.PING_URL || "https://fundraiseup.com/",
+  process.env.REPORT_URL ||"http://127.0.0.1:8080"
 );
 client.start();
 
