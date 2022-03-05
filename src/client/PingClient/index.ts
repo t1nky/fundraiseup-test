@@ -20,8 +20,8 @@ class PingClient {
   };
   constructor(public pingUrl: string, public reportUrl: string) {}
 
-  private async sleepOrStop(seconds: number): Promise<void> {
-    await waitFor(() => this.active === false, seconds);
+  private sleepOrStop(seconds: number): Promise<void> {
+    return waitFor(() => this.active === false, seconds);
   }
 
   private reportPingResult(data: PingReport): Promise<PingReportResult> {
@@ -39,8 +39,15 @@ class PingClient {
     return new Promise<PingReportResult>((resolve, reject) => {
       const req = http.request(this.reportUrl, options, (res) => {
         const data: Uint8Array[] = [];
-        if (res.statusCode === RequestErrors.INTERNAL_SERVER_ERROR) {
-          resolve({ code: RequestErrors.INTERNAL_SERVER_ERROR });
+        if (res.statusCode === RequestErrors.ServerError) {
+          resolve({ code: RequestErrors.ServerError });
+        }
+        if (res.statusCode !== RequestErrors.OK) {
+          reject(
+            new Error(
+              `Request failed with ${res.statusCode} ${res.statusMessage}`
+            )
+          );
         }
         res.on("data", (chunk) => data.push(chunk));
         res.on("end", () => {
@@ -57,7 +64,7 @@ class PingClient {
 
       req.on("timeout", () => {
         req.destroy();
-        resolve({ code: RequestErrors.TIMEOUT });
+        resolve({ code: RequestErrors.Timeout });
       });
 
       req.write(dataString);
@@ -99,10 +106,10 @@ class PingClient {
     this.stats.total += 1;
 
     switch (reportResult.code) {
-      case RequestErrors.INTERNAL_SERVER_ERROR:
+      case RequestErrors.ServerError:
         this.stats.error500 += 1;
         break;
-      case RequestErrors.TIMEOUT:
+      case RequestErrors.Timeout:
         this.stats.timeout += 1;
         break;
       default:
@@ -117,9 +124,10 @@ class PingClient {
     while (this.active) {
       try {
         const pingResult = await this.performPing();
-        let deliveryAttempt = 0;
+        let deliveryAttempt = 1;
+
         while (this.active) {
-          console.log("Sending report");
+          console.log(`Sending report (attempt #${deliveryAttempt})`);
 
           try {
             const reportResult = await this.reportPingResult({

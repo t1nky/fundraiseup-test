@@ -8,7 +8,8 @@
     "dev:client": "ts-node-dev ./src/client/index.ts",
     "build": "tsc",
     "client": "node ./dist/client.index.js",
-    "server": "node ./dist/server.index.js"
+    "server": "node ./dist/server.index.js",
+    "pretty": "prettier --write ."
   },
   "author": "",
   "license": "ISC",

@@ -4,7 +4,7 @@ console.log("Starting client");
 
 const client = new PingClient(
   process.env.PING_URL || "https://fundraiseup.com/",
-  process.env.REPORT_URL ||"http://127.0.0.1:8080"
+  process.env.REPORT_URL || "http://127.0.0.1:8080/data"
 );
 client.start();
 
@@ -14,9 +14,9 @@ const shutdown = () => {
   console.log(
     `Client stopped\n` +
       `  Total requests: ${client.stats.total}\n` +
-      `  Timed out: ${client.stats.timeout}\n` +
+      `  Success: ${client.stats.success}\n` +
       `  Internal server error (500): ${client.stats.error500}\n` +
-      `  Success: ${client.stats.success}`
+      `  Timed out: ${client.stats.timeout}`
   );
 };
 

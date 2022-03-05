@@ -1,5 +1,5 @@
 export enum RequestErrors {
   OK = 200,
-  INTERNAL_SERVER_ERROR = 500,
-  TIMEOUT = 0,
+  ServerError = 500,
+  Timeout = 0,
 }
